@@ -23,6 +23,9 @@ target_link_libraries( real128_test fc )
 add_executable( hmac_test hmac_test.cpp )
 target_link_libraries( hmac_test fc )
 
+add_executable( blinding_test blinding_test.cpp )
+target_link_libraries( blinding_test fc )
+
 add_executable( ecc_test crypto/ecc_test.cpp )
 target_link_libraries( ecc_test fc )
 
@@ -59,6 +62,5 @@ add_executable( all_tests all_tests.cpp
                           time_test.cpp
                           utf8_test.cpp
                           variant_test.cpp
-                          logging_tests.cpp
                           )
 target_link_libraries( all_tests fc )

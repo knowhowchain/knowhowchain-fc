@@ -10,8 +10,6 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-using namespace std;
-
 namespace fc {
    class ofstream::impl : public fc::retainable {
       public:
@@ -25,13 +23,13 @@ namespace fc {
    ofstream::ofstream()
    :my( new impl() ){}
 
-   ofstream::ofstream( const fc::path& file, std::ios_base::openmode m )
+   ofstream::ofstream( const fc::path& file, int m )
    :my( new impl() ) { this->open( file, m ); }
    ofstream::~ofstream(){}
 
-   void ofstream::open( const fc::path& file, std::ios_base::openmode m ) {
+   void ofstream::open( const fc::path& file, int m ) {
      const boost::filesystem::path& bfp = file; 
-     my->ofs.open( bfp, std::ios_base::out | std::ios_base::binary | m );
+     my->ofs.open( bfp, std::ios::binary );
    }
    size_t ofstream::writesome( const char* buf, size_t len ) {
         my->ofs.write(buf,len);

@@ -140,7 +140,7 @@ namespace fc { namespace ecc {
     std::string public_key::to_base58( const public_key_data &key )
     {
       uint32_t check = (uint32_t)sha256::hash(key.data, sizeof(key))._hash[0];
-      static_assert(sizeof(key) + sizeof(check) == 37, "Elliptic public key size (or its hash) is incorrect");
+      assert(key.size() + sizeof(check) == 37);
       array<char, 37> data;
       memcpy(data.data, key.begin(), key.size());
       memcpy(data.begin() + key.size(), (const char*)&check, sizeof(check));
@@ -192,7 +192,7 @@ namespace fc { namespace ecc {
         BN_mod(secexp, secexp, order, ctx);
 
         fc::sha256 secret;
-        FC_ASSERT(BN_num_bytes(secexp) <= int64_t(sizeof(secret)));
+        assert(BN_num_bytes(secexp) <= int64_t(sizeof(secret)));
         auto shift = sizeof(secret) - BN_num_bytes(secexp);
         BN_bn2bin(secexp, ((unsigned char*)&secret)+shift);
         return regenerate( secret );
@@ -231,12 +231,11 @@ namespace fc { namespace ecc {
 
     static fc::string _to_base58( const extended_key_data& key )
     {
-        size_t buf_len = key.size() + 4;
-        char *buffer = (char*)alloca(buf_len);
+        char *buffer = (char*)alloca(key.size() + 4);
         memcpy( buffer, key.begin(), key.size() );
         fc::sha256 double_hash = fc::sha256::hash( fc::sha256::hash( key.begin(), key.size() ));
         memcpy( buffer + key.size(), double_hash.data(), 4 );
-        return fc::to_base58( buffer, buf_len );
+        return fc::to_base58( buffer, sizeof(buffer) );
     }
 
     static void _parse_extended_data( unsigned char* buffer, fc::string base58 )
@@ -302,6 +301,9 @@ namespace fc { namespace ecc {
         return extended_public_key( get_public_key(), c, child_num, parent_fp, depth );
     }
 
+    public_key extended_public_key::generate_p(int i) const { return derive_normal_child(2*i + 0); }
+    public_key extended_public_key::generate_q(int i) const { return derive_normal_child(2*i + 1); }
+
     extended_private_key extended_private_key::derive_child(int i) const
     {
         return i < 0 ? derive_hardened_child(i) : derive_normal_child(i);
@@ -343,6 +345,11 @@ namespace fc { namespace ecc {
     {
        return from_base58( _to_base58( data ) );
     }
+
+    private_key extended_private_key::generate_a(int i) const { return derive_hardened_child(4*i + 0); }
+    private_key extended_private_key::generate_b(int i) const { return derive_hardened_child(4*i + 1); }
+    private_key extended_private_key::generate_c(int i) const { return derive_hardened_child(4*i + 2); }
+    private_key extended_private_key::generate_d(int i) const { return derive_hardened_child(4*i + 3); }
 
     fc::string extended_private_key::str() const
     {
