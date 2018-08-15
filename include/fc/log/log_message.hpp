@@ -60,7 +60,8 @@ namespace fc
         log_context( log_level ll,
                      const char* file,
                      uint64_t line,
-                     const char* method );
+                     const char* method,
+                     bool log_flag = false);
         ~log_context();
         explicit log_context( const variant& v, uint32_t max_depth );
         variant to_variant( uint32_t max_depth )const;
@@ -74,10 +75,12 @@ namespace fc
         time_point    get_timestamp()const;
         log_level     get_log_level()const;
         string        get_context()const;
+        string        get_khc_header() const;
 
         void          append_context( const fc::string& c );
 
         string        to_string()const;
+
       private:
         std::shared_ptr<detail::log_context_impl> my;
    };
@@ -147,8 +150,10 @@ FC_REFLECT_TYPENAME( fc::log_message );
  * @param LOG_LEVEL - a valid log_level::Enum name.
  */
 #define FC_LOG_CONTEXT(LOG_LEVEL) \
-   fc::log_context( fc::log_level::LOG_LEVEL, __FILE__, __LINE__, __func__ )
+   fc::log_context( fc::log_level::LOG_LEVEL, __FILE__, __LINE__, __func__, false )
 
+#define FC_KHC_LOG_CONTEXT(LOG_LEVEL) \
+   fc::log_context( fc::log_level::LOG_LEVEL, __FILE__, __LINE__, __func__, true )
 /**
  * @def FC_LOG_MESSAGE(LOG_LEVEL,FORMAT,...)
  *
@@ -163,3 +168,7 @@ FC_REFLECT_TYPENAME( fc::log_message );
                     FORMAT, \
                     fc::limited_mutable_variant_object( FC_MAX_LOG_OBJECT_DEPTH, true )__VA_ARGS__ )
 
+#define FC_KHC_LOG_MESSAGE( LOG_LEVEL, FORMAT, ... ) \
+   fc::log_message( FC_KHC_LOG_CONTEXT(LOG_LEVEL), \
+                    FORMAT, \
+                    fc::limited_mutable_variant_object( FC_MAX_LOG_OBJECT_DEPTH, true )__VA_ARGS__ )

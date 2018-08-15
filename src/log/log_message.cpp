@@ -24,6 +24,7 @@ namespace fc
             string       hostname;
             string       context;
             time_point   timestamp;
+            bool         khc_log_flag;
       };
 
       class log_message_impl
@@ -45,7 +46,7 @@ namespace fc
    :my( std::make_shared<detail::log_context_impl>() ){}
 
    log_context::log_context( log_level ll, const char* file, uint64_t line, 
-                                            const char* method )
+                                            const char* method, bool log_flag)
    :my( std::make_shared<detail::log_context_impl>() )
    {
       my->level       = ll;
@@ -56,6 +57,7 @@ namespace fc
       my->thread_name = fc::thread::current().name();
       const char* current_task_desc = fc::thread::current().current_task_desc();
       my->task_name   = current_task_desc ? current_task_desc : "?unnamed?";
+      my->khc_log_flag = log_flag;
    }
 
    log_context::log_context( const variant& v, uint32_t max_depth )
@@ -80,6 +82,7 @@ namespace fc
       return my->thread_name + "  " + my->file + ":" + fc::to_string(my->line) + " " + my->method;
 
    }
+
 
    void log_context::append_context( const fc::string& s )
    {
@@ -161,7 +164,36 @@ namespace fc
    time_point  log_context::get_timestamp()const  { return my->timestamp; }
    log_level  log_context::get_log_level()const{ return my->level;   }
    string     log_context::get_context()const   { return my->context; }
-
+   string     log_context::get_khc_header()const
+   {
+       string head;
+       if (!my->khc_log_flag)
+           return head;
+       head += "[";
+       switch(get_log_level().value)
+       {
+       case fc::log_level::all:
+            head += "all";
+            break;
+       case fc::log_level::debug:
+            head += "debug";
+            break;
+       case fc::log_level::info:
+            head += "info";
+            break;
+       case fc::log_level::warn:
+            head += "warn";
+            break;
+       case fc::log_level::error:
+            head += "error";
+            break;
+       default:
+            head += "off";
+            break;
+       }
+       head +=  "]";
+       return head;
+   }
 
    variant log_context::to_variant(uint32_t max_depth)const
    {

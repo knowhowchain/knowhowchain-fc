@@ -205,3 +205,27 @@ namespace fc
 # undef dlog
 # define dlog(...) FC_MULTILINE_MACRO_BEGIN FC_MULTILINE_MACRO_END
 #endif
+
+#define khc_ilog( FORMAT, ... ) \
+  FC_MULTILINE_MACRO_BEGIN \
+   if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::info ) ) \
+      (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( info, FORMAT, __VA_ARGS__ ) ); \
+  FC_MULTILINE_MACRO_END
+
+#define khc_dlog( FORMAT, ... ) \
+  FC_MULTILINE_MACRO_BEGIN \
+   if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::debug ) ) \
+      (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( debug, FORMAT, __VA_ARGS__ ) ); \
+  FC_MULTILINE_MACRO_END
+
+#define khc_wlog( FORMAT, ... ) \
+  FC_MULTILINE_MACRO_BEGIN \
+   if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::warn ) ) \
+      (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( warn, FORMAT, __VA_ARGS__ ) ); \
+  FC_MULTILINE_MACRO_END
+
+#define khc_elog( FORMAT, ... ) \
+  FC_MULTILINE_MACRO_BEGIN \
+   if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::error ) ) \
+      (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( error, FORMAT, __VA_ARGS__ ) ); \
+  FC_MULTILINE_MACRO_END
