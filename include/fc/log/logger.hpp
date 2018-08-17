@@ -62,6 +62,10 @@ namespace fc
 #define DEFAULT_LOGGER
 #endif
 
+#ifndef KHC_LOGGER
+#define KHC_LOGGER "khc"
+#endif
+
 // suppress warning "conditional expression is constant" in the while(0) for visual c++
 // http://cnicholson.net/2009/03/stupid-c-tricks-dowhile0-and-c4127/
 #define FC_MULTILINE_MACRO_BEGIN do {
@@ -210,22 +214,30 @@ namespace fc
   FC_MULTILINE_MACRO_BEGIN \
    if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::info ) ) \
       (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( info, FORMAT, __VA_ARGS__ ) ); \
+   if( (fc::logger::get(KHC_LOGGER)).is_enabled( fc::log_level::info ) ) \
+      (fc::logger::get(KHC_LOGGER)).log( FC_KHC_LOG_MESSAGE( info, FORMAT, __VA_ARGS__ ) ); \
   FC_MULTILINE_MACRO_END
 
 #define khc_dlog( FORMAT, ... ) \
   FC_MULTILINE_MACRO_BEGIN \
-   if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::debug ) ) \
-      (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( debug, FORMAT, __VA_ARGS__ ) ); \
+    if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::debug ) ) \
+       (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( debug, FORMAT, __VA_ARGS__ ) ); \
+    if( (fc::logger::get(KHC_LOGGER)).is_enabled( fc::log_level::debug ) ) \
+       (fc::logger::get(KHC_LOGGER)).log( FC_KHC_LOG_MESSAGE( debug, FORMAT, __VA_ARGS__ ) ); \
   FC_MULTILINE_MACRO_END
 
 #define khc_wlog( FORMAT, ... ) \
   FC_MULTILINE_MACRO_BEGIN \
    if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::warn ) ) \
       (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( warn, FORMAT, __VA_ARGS__ ) ); \
+   if( (fc::logger::get(KHC_LOGGER)).is_enabled( fc::log_level::warn ) ) \
+      (fc::logger::get(KHC_LOGGER)).log( FC_KHC_LOG_MESSAGE( warn, FORMAT, __VA_ARGS__ ) ); \
   FC_MULTILINE_MACRO_END
 
 #define khc_elog( FORMAT, ... ) \
   FC_MULTILINE_MACRO_BEGIN \
    if( (fc::logger::get(DEFAULT_LOGGER)).is_enabled( fc::log_level::error ) ) \
       (fc::logger::get(DEFAULT_LOGGER)).log( FC_KHC_LOG_MESSAGE( error, FORMAT, __VA_ARGS__ ) ); \
+   if( (fc::logger::get(KHC_LOGGER)).is_enabled( fc::log_level::error ) ) \
+      (fc::logger::get(KHC_LOGGER)).log( FC_KHC_LOG_MESSAGE( error, FORMAT, __VA_ARGS__ ) ); \
   FC_MULTILINE_MACRO_END

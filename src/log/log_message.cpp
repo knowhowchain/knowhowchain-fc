@@ -173,22 +173,22 @@ namespace fc
        switch(get_log_level().value)
        {
        case fc::log_level::all:
-            head += "all";
+            head += "ALL";
             break;
        case fc::log_level::debug:
-            head += "debug";
+            head += "DEBUG";
             break;
        case fc::log_level::info:
-            head += "info";
+            head += "INFO";
             break;
        case fc::log_level::warn:
-            head += "warn";
+            head += "WARN";
             break;
        case fc::log_level::error:
-            head += "error";
+            head += "ERROR";
             break;
        default:
-            head += "off";
+            head += "OFF";
             break;
        }
        head +=  "]";
