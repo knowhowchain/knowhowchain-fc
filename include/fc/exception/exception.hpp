@@ -472,3 +472,29 @@ namespace fc
                 std::current_exception() ); \
    }
 
+#define KHC_WASSERT( TEST, ... ) \
+  FC_EXPAND_MACRO( \
+    FC_MULTILINE_MACRO_BEGIN \
+      if( UNLIKELY(!(TEST)) ) \
+      {                                                                      \
+        khc_wlog( __VA_ARGS__ ); \
+        if( fc::enable_record_assert_trip )                                  \
+           fc::record_assert_trip( __FILE__, __LINE__, #TEST );              \
+        FC_THROW_EXCEPTION( fc::assert_exception, #TEST ": "  __VA_ARGS__ ); \
+      }                                                                      \
+    FC_MULTILINE_MACRO_END \
+  )
+
+#define KHC_EASSERT( TEST, ... ) \
+  FC_EXPAND_MACRO( \
+    FC_MULTILINE_MACRO_BEGIN \
+      if( UNLIKELY(!(TEST)) ) \
+      {                                                                      \
+        khc_elog( __VA_ARGS__ ); \
+        if( fc::enable_record_assert_trip )                                  \
+           fc::record_assert_trip( __FILE__, __LINE__, #TEST );              \
+        FC_THROW_EXCEPTION( fc::assert_exception, #TEST ": "  __VA_ARGS__ ); \
+      }                                                                      \
+    FC_MULTILINE_MACRO_END \
+  )
+  
