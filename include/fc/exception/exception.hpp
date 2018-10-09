@@ -477,7 +477,7 @@ namespace fc
     FC_MULTILINE_MACRO_BEGIN \
       if( UNLIKELY(!(TEST)) ) \
       {                                                                      \
-        khc_wlog( __VA_ARGS__ ); \
+        khc_wlog( #TEST ": "  __VA_ARGS__ );                                         \
         if( fc::enable_record_assert_trip )                                  \
            fc::record_assert_trip( __FILE__, __LINE__, #TEST );              \
         FC_THROW_EXCEPTION( fc::assert_exception, #TEST ": "  __VA_ARGS__ ); \
@@ -490,7 +490,7 @@ namespace fc
     FC_MULTILINE_MACRO_BEGIN \
       if( UNLIKELY(!(TEST)) ) \
       {                                                                      \
-        khc_elog( __VA_ARGS__ ); \
+        khc_elog( #TEST ": "  __VA_ARGS__  ); \
         if( fc::enable_record_assert_trip )                                  \
            fc::record_assert_trip( __FILE__, __LINE__, #TEST );              \
         FC_THROW_EXCEPTION( fc::assert_exception, #TEST ": "  __VA_ARGS__ ); \
